@@ -1,0 +1,82 @@
+		IN 10H
+		LXI B,0244H ; KA8ISTERISH 1/2second
+		MVI D,01H ;arxikopoisi D
+		CMA
+		STA 3000H
+	 
+
+DECISION:    CALL DELB ;klisi kathisterisis
+	      LDA 2000H 
+	      ANI 02H ; an to 2o lsb einai on, freeze     
+	      CPI 00H
+             JZ FREEZE 
+             LDA 2000H
+             ANI 01H  ;mask 1st lsb
+             CPI 00H
+             JNZ PERADOTHE
+             JMP NORMALMOVE
+
+NORMALMOVE:	MVI E,00H ;apli kukliki kinisi 123456781234...
+	   	MOV A,D 
+	   	RLC    
+	   	MOV D,A 
+	   	CMA 
+	   	STA 3000H 
+	       JMP DECISION 
+
+PERADOTHE:    MOV A,E ;kinisi 123456787654...
+		CPI 00H   ;an a!=0, pigaine anapoda
+		JNZ DOTHE 
+		JMP PERA
+  
+
+PERA:  	MVI E,00H 
+		MOV A,D 
+		CPI 80H  ;an eimai sto teleutaio led, pao deksia
+		JNC DOTHE   
+		RLC 	; kinoume aristera 		
+		MOV D,A
+		CMA 
+		STA 3000H 
+		JMP DECISION 
+
+DOTHE:        MOV A,D
+		MVI E,01H 
+		CPI 01H ;an eimai sto proto led, pao aristera
+		JZ PERA 
+		RRC      ;kinoume deksia
+		MOV D,A
+		CMA 
+		STA 3000H 
+		JMP DECISION
+
+
+FREEZE:
+	MVI A,FEH
+	STA 3000H
+	JMP DECISION 
+
+
+END
+      
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+             
+             
+             
+
+
+
+	 

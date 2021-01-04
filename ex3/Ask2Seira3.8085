@@ -1,0 +1,84 @@
+	IN 10H
+	MVI A,0DH
+	MVI B,00H
+	SIM
+	EI
+	LXI H,0A00H
+	MVI M,10H
+	LXI H,0A01H
+	MVI M,10H
+	LXI H,0A02H
+	MVI M,10H
+	LXI H,0A03H
+	MVI M,10H
+START:
+	JMP START
+
+INTR_ROUTINE:
+	EI
+	JMP READING
+READING:	
+	CALL KIND	;first digit
+	RAL
+	RAL
+	RAL
+	RAL
+	MOV B,A
+	CALL KIND	;second digit
+	ADD B
+	MOV B,A
+DECISION:	
+	MVI C,32H 	;50
+	CMP C	
+	JC LED1
+	JZ LED1	;If input belongs [0,50]
+	MVI D,64H 	;100
+	CMP D		
+	JC LED2
+	JZ LED2	;If input belongs (50,100]
+	MVI E,96H 	;150
+	CMP E		
+	JC LED3
+	JZ LED3	;If input belongs (100,150]
+	JMP LED4	;If input belongs (150,255]
+
+LED1:	MVI A,FEH	;1st LED to the right
+	STA 3000H
+	JMP DISPLAY
+
+LED2:	MVI A,FDH	;2st LED to the right
+	STA 3000H
+	JMP DISPLAY
+
+LED3:	MVI A,FBH	;3st LED to the right
+	STA 3000H
+	JMP DISPLAY
+
+LED4:	MVI A,F7H	;4st LED to the right
+	STA 3000H
+	JMP DISPLAY
+
+DISPLAY:
+	LXI H,0A04H
+	MOV A,B		
+	ANI 0FH		;isolate 4 LSB'S
+	MOV M,A		
+	INX H			;point to 0A05H
+	MOV A,B		;
+	ANI F0H		;isolate 4 MSB'S
+	RRC			;shift 4 times  LSB's
+	RRC
+	RRC
+	RRC			
+	MOV M,A		
+
+	LXI D,0A00H		;display them 
+	CALL STDM
+HHH:	CALL DCD
+	JMP HHH
+	
+
+END
+	
+	
+		

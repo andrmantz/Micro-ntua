@@ -1,0 +1,33 @@
+START:
+	MVI D,00H   
+	LDA 2000H ;diasma eisodou
+	CPI 64H ;sygkrisi me 100
+	JNC MODULO ;an megalutero 100, pigaine sto modulo
+	JMP CORE
+
+MODULO:
+	
+	SUI 64H ;afairese 100
+	CPI 64H ;an megalitero 100, ksana sto modulo
+	JNZ MODULO
+	JMP CORE
+
+CORE:
+	SUI 0AH ;afairese10
+	INR D ;metra tis 10ades
+	CPI 0AH ;an megalutero toy 10
+	JNZ CORE ;ksana afairese 10
+	MOV C,A ;store to periexomeno tou A ston c
+	MOV A,D ; store to D ston B
+	RLC ; 4 rotate oste na ftiaksoume ta 4 msb
+	RLC
+	RLC
+	RLC
+	ADD C ; prosthese ta 4 lsb
+	CMA 
+	STA 3000H ;ektupose
+	RST 1
+	JMP START
+END
+
+	

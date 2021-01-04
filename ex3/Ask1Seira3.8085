@@ -1,0 +1,77 @@
+
+	IN 10H
+	LXI H,0B02H
+	MVI M,10H
+	LXI H,0B03H
+	MVI M,10H
+	LXI H,0B04H
+	MVI M,10H
+	LXI H,0B05H
+	MVI M,10H
+START:
+	MVI A,0DH		
+	SIM			
+	EI			;RTS 6.5 routine
+
+WAIT:
+	JMP WAIT
+	
+INTR_ROUTINE:
+	MVI C,61H
+ON_LEDS:
+	MVI B,00H		;1/2sec delay
+	MVI A,00H
+	STA 3000H		;turn off for 1/2 sec
+	EI			;enable interupts
+
+DECIMAL_TIMER:
+
+ 	DCR C
+	MOV A,C
+	CPI 00H
+	JZ WAIT
+	MOV A,C		;if sub leads to F last digit decrease to have
+	ANI 0FH		;9 as last to make it behave like a decimal
+	CPI 0FH
+	JZ DECREASE_DECIMAL
+	JMP DISPLAY
+
+DECREASE_DECIMAL:
+
+	MOV A,C
+	SUI 06H
+	MOV C,A
+
+DISPLAY:
+	INR B
+	MOV A,B
+	CPI 10H
+	JZ OFF_LEDS
+	CPI 20H 
+	JZ ON_LEDS
+	MVI B,02H
+	CALL DELB
+	MOV B,A
+	LXI H,0B00H
+	MOV A,C		
+	ANI 0FH		;isolate4 LSB'S
+	MOV M,A		
+	INX H			;point to 0A01H
+	MOV A,C		
+	ANI F0H		;isolate 4 MSB'S
+	RRC			;shift LSB'S
+	RRC
+	RRC
+	RRC			
+	MOV M,A		
+	LXI D,0B00H		;display them
+	CALL STDM
+	CALL DCD
+	JMP DISPLAY
+OFF_LEDS:
+	MVI B,11H
+	MVI A,FFH
+	STA 3000H		;turn off for 1/2 sec
+	JMP DISPLAY
+	
+END
