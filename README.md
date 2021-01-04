@@ -4,6 +4,6 @@ This repo holds the exercises, and reports, of Microcomputes class at ECE NTUA, 
 ## Contents
 * **ex1: 8085 assembly and Verilog**
 * **ex2: 8085 assembly**
-* **ex3: AVR assembly and C**
-* **ex4: 8085 assembly**
+* **ex3: 8085 assembly**
+* **ex4: AVR assembly and C**
 * **ex5: 8086 assembly**
