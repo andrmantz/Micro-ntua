@@ -1,5 +1,5 @@
 # Microcomputes NTUA
-This repo holds the exercises, and reports, of Microcomputes class at ECE NTUA, 2019-2020.
+This repo holds the exercises, and reports, of Microcomputer's class at ECE NTUA, 2019-2020.
 
 ## Contents
 * **ex1: 8085 assembly and Verilog**
